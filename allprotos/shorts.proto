@@ -144,6 +144,7 @@ message Short {
     string square_thumbnail_url = 20;
     string portrait_thumbnail_url = 21;
     string creator_id = 22;
+    string category_slug = 23;
 }
 
 message InteractionItemPositionInPercentage {
