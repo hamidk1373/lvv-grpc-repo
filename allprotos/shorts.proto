@@ -86,7 +86,7 @@ message UpdateShortRequest {
     string timezone = 6;
     google.protobuf.Timestamp start_time = 7;
     google.protobuf.Timestamp end_time = 8;
-    string category_slug = 9;
+    repeated string categories = 9;
 }
 
 message UpdateShortResponse {
@@ -112,7 +112,7 @@ message ListShortsRequest {
     google.protobuf.Timestamp end_time = 6;
     string creator_id = 7;
     string product_url = 8;
-    string category_slug = 9;
+    repeated string categories = 9;
 }
 
 message ListShortsResponse {
@@ -144,7 +144,7 @@ message Short {
     string square_thumbnail_url = 20;
     string portrait_thumbnail_url = 21;
     string creator_id = 22;
-    string category_slug = 23;
+    repeated string categories = 23;
 }
 
 message InteractionItemPositionInPercentage {
