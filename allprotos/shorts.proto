@@ -61,7 +61,6 @@ message UpdateVideoConfigRequest {
     int32 trim_start_time = 4; // Start time for trimming, in seconds
     int32 trim_end_time = 5; // End time for trimming, in seconds
     bool muted = 6;
-    string category_slug = 7;
 }
 
 message UpdateVideoConfigResponse {
@@ -87,6 +86,7 @@ message UpdateShortRequest {
     string timezone = 6;
     google.protobuf.Timestamp start_time = 7;
     google.protobuf.Timestamp end_time = 8;
+    string category_slug = 9;
 }
 
 message UpdateShortResponse {
