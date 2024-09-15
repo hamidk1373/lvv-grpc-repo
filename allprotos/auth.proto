@@ -1,0 +1,353 @@
+syntax = "proto3";
+
+package auth;
+
+option go_package = "./authpb";
+
+import "google/protobuf/timestamp.proto";
+
+message SignUpRequest {
+  string email = 1;
+  string first_name = 2;
+  string last_name = 3;
+  string password = 4;
+  string google_recaptcha_token = 5;
+}
+
+message SignUpResponse {
+  UserClaims claims = 1;
+}
+
+message SignInRequest {
+  string email = 1;
+  string password = 2;
+}
+
+message SignInResponse {
+  UserClaims claims = 1;
+}
+
+message SignOutRequest {
+  string access_token = 1;
+}
+
+message SignOutResponse {
+}
+
+message GetUserRequest {
+  string user_id = 1;
+}
+
+message GetUserResponse {
+  User user = 1;
+}
+
+message GetUserByEmailRequest {
+  string email = 1;
+}
+
+message GetUserByEmailResponse {
+  User user = 1;
+}
+
+message UpdateUserRoleRequest {
+  string user_id = 1;
+  RoleType new_role = 2;
+}
+
+message UpdateUserRoleResponse {
+}
+
+message DeleteUserRequest {
+  string user_id = 1;
+}
+
+message DeleteUserResponse {
+}
+
+message ChangePasswordRequest {
+  string user_id = 1;
+  string old_password = 2;
+  string new_password = 3;
+}
+
+message ChangePasswordResponse {
+}
+
+message RequestResetPasswordViaEmailRequest {
+  string email = 1;
+  string google_recaptcha_token = 2;
+}
+
+message RequestResetPasswordViaEmailResponse {
+}
+
+message ResetPasswordRequest {
+  string user_id = 1;
+  string new_password = 2;
+}
+
+message ResetPasswordResponse {
+}
+
+enum RoleType {
+  UNKNOWN_ROLE = 0;
+  ADMIN_ROLE = 1;
+  CUSTOMER_ROLE = 2;
+}
+
+message UserClaims {
+  string email = 1;
+  string first_name = 2;
+  string last_name = 3;
+  string picture = 4;
+  string access_token = 5;
+  RoleType role = 6;
+  string user_id = 7;
+  bool verified = 8;
+}
+
+message CheckAuthorizationRequest {
+  string access_token = 1;
+  string operation_name = 2;
+  string operation_type = 3;
+  string origin_base_url = 4;
+}
+
+message CheckAuthorizationResponse {
+  UserClaims user_claims = 1;
+}
+
+message ListUsersRequest {
+  int32 page_size = 1;
+  string page_token = 2;
+}
+
+message ListUsersResponse {
+  repeated User users = 1;
+  int32 total_count = 2;
+  string next_page_token = 3;
+}
+
+message VerifyEmailRequest {
+  string user_id = 1;
+  string verification_code = 2;
+  string google_recaptcha_token = 3;
+}
+
+message VerifyEmailResponse {
+}
+
+message DeactivateUserRequest {
+  string user_id = 1;
+}
+
+message DeactivateUserResponse {
+}
+
+message ActivateUserRequest {
+  string user_id = 1;
+}
+
+message ActivateUserResponse {
+}
+
+message User {
+  string user_id = 1;
+  string email = 2;
+  string first_name = 3;
+  string last_name = 4;
+  RoleType role = 5;
+  string profile_picture_url = 6;
+  bool is_active = 7;
+  google.protobuf.Timestamp created_at = 8;
+}
+
+message ResetPasswordViaVerificationCodeRequest {
+  string verification_code = 1;
+  string email = 2;
+  string id = 3;
+  string new_password = 4;
+  string google_recaptcha_token = 5;
+}
+
+message ResetPasswordViaVerificationCodeResponse {
+}
+
+message ResendVerificationCodeRequest {
+  string user_id = 1;
+  string google_recaptcha_token = 2;
+}
+
+message ResendVerificationCodeResponse {
+  int32 next_retry_for_resend = 1;
+}
+
+enum TicketingDepartment {
+  UNKNOWN_DEPARTMENT = 0;
+  MARKETING = 1;
+  SALES = 2;
+  TECH = 3;
+}
+
+// Enum definitions for priority and status
+enum Priority {
+  UNKNOWN_PRIORITY = 0;
+  LOW = 1;
+  MEDIUM = 2;
+  HIGH = 3;
+}
+
+enum Status {
+  UNKNOWN_TICKET_STATUS = 0;
+  OPEN = 1;
+  IN_PROGRESS = 2;
+  CLOSED = 3;
+  RESOLVED = 4;
+}
+
+// Message definition for a ticket
+message Ticket {
+  string id = 1;
+  string space_id = 2;
+  RoleType creator_role = 3;
+  bool system_generated = 4;
+  string user_email = 5;
+  string user_id = 6;
+  string user_name = 7;
+  string admin_email = 8;
+  string admin_id = 9;
+  string admin_name = 10;
+  RoleType last_responder_role = 11;
+  TicketingDepartment department = 12;
+  Priority priority = 13;
+  string topic = 14;
+  Status status = 15;
+  repeated TicketMessage messages = 16;
+  google.protobuf.Timestamp created_at = 17;
+  google.protobuf.Timestamp updated_at = 18;
+}
+
+message TicketMessage {
+  string id = 1;
+  string email = 2;
+  RoleType role = 3;
+  string content = 4;
+  google.protobuf.Timestamp created_at = 5;
+}
+
+message PostTicketRequest {
+  string ticket_id = 1;
+  string space_id = 2;
+  RoleType creator_role = 3;
+  string user_email = 4;
+  string user_id = 5;
+  string user_name = 6;
+  string admin_email = 7;
+  string admin_id = 8;
+  string admin_name = 9;
+  TicketingDepartment department = 12;
+  Priority priority = 13;
+  string topic = 14;
+  string content = 15;
+}
+
+message PostTicketResponse {
+  string ticket_id = 1;
+}
+
+// Request and response messages for CloseTicket
+message CloseTicketRequest {
+  string ticket_id = 1;
+}
+
+message CloseTicketResponse {
+}
+
+// Request and response messages for OpenTicket
+message OpenTicketRequest {
+  string ticket_id = 1;
+}
+
+message OpenTicketResponse {
+}
+
+// Request and response messages for GetTicket
+message GetTicketRequest {
+  string ticket_id = 1;
+}
+
+message GetTicketResponse {
+  Ticket ticket = 1;
+}
+
+// Request and response messages for ListTickets
+message ListTicketsRequest {
+  string user_id = 1;
+  int32 page_size = 2;
+  string page_token = 3;
+}
+
+message ListTicketsResponse {
+  repeated Ticket tickets = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+}
+
+message ChangeUserNameRequest {
+  string user_id = 1;
+  string first_name = 2;
+  string last_name = 3;
+}
+
+message ChangeUserNameResponse {}
+
+message UploadProfilePhotoRequest {
+  string user_id = 1;
+  bytes image = 2;
+  string img_ext = 3;
+}
+
+message UploadProfilePhotoResponse {
+  string url = 1;
+}
+
+message ValidateUserPasswordRequest {
+  string user_id = 1;
+  string password = 2;
+}
+
+message ValidateUserPasswordResponse {}
+
+service AuthService {
+  rpc SignUp(SignUpRequest) returns (SignUpResponse);
+  rpc VerifyEmail(VerifyEmailRequest) returns (VerifyEmailResponse);
+  rpc ResendVerificationCode(ResendVerificationCodeRequest) returns (ResendVerificationCodeResponse);
+  rpc SignIn(SignInRequest) returns (SignInResponse);
+  rpc SignOut(SignOutRequest) returns (SignOutResponse);
+
+  rpc GetUser(GetUserRequest) returns (GetUserResponse);
+  rpc GetUserByEmail(GetUserByEmailRequest) returns (GetUserByEmailResponse);
+  rpc ListUsers(ListUsersRequest) returns (ListUsersResponse);
+  rpc UpdateUserRole(UpdateUserRoleRequest) returns (UpdateUserRoleResponse);
+  rpc DeleteUser(DeleteUserRequest) returns (DeleteUserResponse);
+  rpc DeactivateUser(DeactivateUserRequest) returns (DeactivateUserResponse);
+  rpc ActivateUser(ActivateUserRequest) returns (ActivateUserResponse);
+
+  rpc ChangePassword(ChangePasswordRequest) returns (ChangePasswordResponse);
+  rpc RequestResetPasswordViaEmail(RequestResetPasswordViaEmailRequest) returns (RequestResetPasswordViaEmailResponse);
+  rpc ResetPasswordViaVerificationCode(ResetPasswordViaVerificationCodeRequest) returns (ResetPasswordViaVerificationCodeResponse);
+  rpc ResetPassword(ResetPasswordRequest) returns (ResetPasswordResponse); // ResetPassword is only for admin role
+  rpc ChangeUserName(ChangeUserNameRequest) returns (ChangeUserNameResponse);
+  rpc UploadProfilePhoto(UploadProfilePhotoRequest) returns (UploadProfilePhotoResponse);
+
+  rpc CheckAuthorization(CheckAuthorizationRequest) returns (CheckAuthorizationResponse);
+
+  rpc PostTicket(PostTicketRequest) returns (PostTicketResponse);
+  rpc CloseTicket(CloseTicketRequest) returns (CloseTicketResponse);
+  rpc OpenTicket(OpenTicketRequest) returns (OpenTicketResponse);
+  rpc GetTicket(GetTicketRequest) returns (GetTicketResponse);
+  rpc ListTickets(ListTicketsRequest) returns (ListTicketsResponse);
+
+  rpc ValidateUserPassword(ValidateUserPasswordRequest) returns (ValidateUserPasswordResponse);
+}

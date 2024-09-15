@@ -1,0 +1,94 @@
+syntax = "proto3";
+
+package video;
+
+message StreamLiveEventRequest {
+  string host_id = 1;
+  string title = 2;
+  string description = 3;
+}
+
+message StreamLiveEventResponse {
+  string event_id = 1;
+  string stream_url = 2;
+  string status = 3;
+}
+
+message ViewLiveRequest {
+  string event_id = 1;
+}
+
+message ViewLiveResponse {
+  string status = 1;
+}
+
+message GetLiveEventRequest {
+  string event_id = 1;
+}
+
+message GetLiveEventResponse {
+  string event_id = 1;
+  string host_id = 2;
+  string title = 3;
+  string description = 4;
+  string stream_url = 5;
+  string status = 6;
+}
+
+message UpdateLiveEventRequest {
+  string event_id = 1;
+  string new_title = 2;
+  string new_description = 3;
+}
+
+message UpdateLiveEventResponse {
+  string status = 1;
+}
+
+message ListLiveEventsRequest {
+  string host_id = 1;
+}
+
+message ListLiveEventsResponse {
+  repeated LiveEvent events = 1;
+}
+
+message LiveEvent {
+  string event_id = 1;
+  string title = 2;
+  string description = 3;
+  string stream_url = 4;
+}
+
+// Request and response messages
+message ScheduleLiveEventRequest {
+  string host_id = 1;
+  string event_details = 2;
+  string start_time = 3;
+}
+
+message ScheduleLiveEventResponse {
+  string event_id = 1;
+  string status = 2;
+}
+
+message CancelLiveEventRequest {}
+
+message CancelLiveEventResponse {}
+
+message ApproveLiveEventRequest {}
+
+message ApproveLiveEventResponse {}
+
+// The service definition.
+service LiveEventsService {
+  rpc ScheduleLiveEvent(ScheduleLiveEventRequest) returns (ScheduleLiveEventResponse);
+  rpc ApproveLiveEvent(ApproveLiveEventRequest) returns (ApproveLiveEventResponse);
+  rpc GetLiveEventDetails(GetLiveEventRequest) returns (GetLiveEventResponse);
+  rpc UpdateLiveEventDetails(UpdateLiveEventRequest) returns (UpdateLiveEventResponse);
+  rpc CancelLiveEvent(CancelLiveEventRequest) returns (CancelLiveEventResponse);
+  rpc ListLiveEvents(ListLiveEventsRequest) returns (ListLiveEventsResponse);
+  
+  rpc StreamLiveEvent(stream StreamLiveEventRequest) returns (StreamLiveEventResponse);
+  rpc ViewLiveEvent(ViewLiveRequest) returns (ViewLiveResponse);
+}

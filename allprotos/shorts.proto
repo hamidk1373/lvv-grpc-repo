@@ -1,0 +1,462 @@
+syntax = "proto3";
+
+package shorts;
+
+option go_package = "./shortspb";
+
+import "google/protobuf/timestamp.proto";
+
+enum ShortStatus {
+    UNKNOWN_SHORT_STATUS = 0;
+    PUBLISHED = 1;
+    DRAFT = 2;
+    WAIT_FOR_REVIEW = 3;
+    REJECTED = 4;
+}
+
+message CreateShortRequest {
+    string user_id = 1;
+    string space_id = 2;
+}
+
+message CreateShortResponse {
+    string short_id = 1;
+}
+
+message UploadVideoRequest {
+    string space_id = 1;
+    string short_id = 2;
+    bytes video = 3;
+    string video_ext = 4;
+    double video_duration = 5;
+}
+
+message UploadVideoResponse {
+    VideoItem video = 1;
+}
+
+message VideoItem {
+    string video_id = 1;
+    string video_url = 2;
+    int32 start_time = 3;
+    int32 end_time = 4;
+    bool muted = 5;
+    double video_duraion = 6;
+}
+
+message DeleteVideoRequest {
+    string space_id = 1;
+    string short_id = 2;
+    string video_id = 3;
+}
+
+message DeleteVideoResponse {
+    bool ok = 1;
+}
+
+message UpdateVideoConfigRequest {
+    string space_id = 1;
+    string short_id = 2;
+    string video_id = 3;
+    int32 trim_start_time = 4; // Start time for trimming, in seconds
+    int32 trim_end_time = 5; // End time for trimming, in seconds
+    bool muted = 6;
+    string category_slug = 7;
+}
+
+message UpdateVideoConfigResponse {
+    bool ok = 1;
+}
+
+message CombineVideosRequest {
+    string space_id = 1;
+    string short_id = 2;
+    bool muted = 3;
+}
+
+message CombineVideosResponse {
+    string basic_video_url = 1;
+}
+
+message UpdateShortRequest {
+    string space_id = 1;
+    string short_id = 2;
+    string title = 3;
+    string description = 4;
+    bool limit_show_time = 5;
+    string timezone = 6;
+    google.protobuf.Timestamp start_time = 7;
+    google.protobuf.Timestamp end_time = 8;
+}
+
+message UpdateShortResponse {
+    bool ok = 1;
+}
+
+message GetShortRequest {
+    string space_id = 1;
+    string short_id = 2;
+    bool include_manifest = 3;
+}
+
+message GetShortResponse {
+    Short short = 1;
+}
+
+message ListShortsRequest {
+    string space_id = 1;
+    int32 page_size = 2;
+    string page_token = 3;
+    string search_short_name = 4;
+    google.protobuf.Timestamp start_time = 5;
+    google.protobuf.Timestamp end_time = 6;
+    string creator_id = 7;
+    string product_url = 8;
+    string category_slug = 9;
+}
+
+message ListShortsResponse {
+    repeated Short shorts = 1;
+    int32 total_count = 2;
+    string next_page_token = 3;
+}
+
+message Short {
+    string space_id = 1;
+    string short_id = 2;
+    string title = 3;
+    string description = 4;
+    bool limit_show_time = 5;
+    string timezone = 6;
+    google.protobuf.Timestamp start_time = 7;
+    google.protobuf.Timestamp end_time = 8;
+    string video_id = 9;
+    ShortStatus status = 10;
+    bool streaming_ready = 11;
+    repeated VideoItem videos = 12;
+    string main_video_url = 13;
+    repeated HotspotInteraction hotspots_interactions = 14;
+    repeated ButtonInteraction button_interactions = 15;
+    repeated TextInteraction text_interactions = 16;
+    repeated ProductInteraction product_interactions = 17;
+    ProductsCardsStyle product_card_type = 18;
+    string manifest = 19;
+    string square_thumbnail_url = 20;
+    string portrait_thumbnail_url = 21;
+    string creator_id = 22;
+}
+
+message InteractionItemPositionInPercentage {
+    int32 top = 1;
+    int32 left = 2;
+    int32 width = 3;
+    int32 height = 4;
+}
+
+message HotspotInteraction {
+    string id = 1;
+    InteractionItemPositionInPercentage position = 2;
+    string url = 3;
+    int32 start_time = 4;
+    int32 end_time = 5;
+}
+
+message CreateHotspotInteractionRequest {
+    string space_id = 1;
+    string short_id = 2;
+    HotspotInteraction interaction = 3;
+}
+
+message CreateHotspotInteractionResponse {
+    string interaction_id = 1;
+}
+
+message UpdateHotspotInteractionRequest {
+    string space_id = 1;
+    string short_id = 2;
+    HotspotInteraction interaction = 3;
+}
+
+message UpdateHotspotInteractionResponse {
+    bool ok = 1;
+}
+
+message DeleteHotspotInteractionRequest {
+    string space_id = 1;
+    string short_id = 2;
+    string interaction_id = 3;
+}
+
+message DeleteHotspotInteractionResponse {
+    bool ok = 1;
+}
+
+message TextInteraction {
+    string id = 1;
+    InteractionItemPositionInPercentage position = 2;
+    string text = 3;
+    int32 text_size = 4;
+    string color = 5;
+    string background_color = 6;
+    int32 start_time = 7;
+    int32 end_time = 8;
+}
+
+message CreateTextInteractionRequest {
+    string space_id = 1;
+    string short_id = 2;
+    TextInteraction interaction = 3;
+}
+
+message CreateTextInteractionResponse {
+    string interaction_id = 1;
+}
+
+message UpdateTextInteractionRequest {
+    string space_id = 1;
+    string short_id = 2;
+    TextInteraction interaction = 3;
+}
+
+message UpdateTextInteractionResponse {
+    bool ok = 1;
+}
+
+message DeleteTextInteractionRequest {
+    string space_id = 1;
+    string short_id = 2;
+    string interaction_id = 3;
+}
+
+message DeleteTextInteractionResponse {
+    bool ok = 1;
+}
+
+message ButtonInteraction {
+    string id = 1;
+    InteractionItemPositionInPercentage position = 2;
+    string text = 3;
+    int32 size = 4;
+    string color = 5;
+    string background_color = 6;
+    string url = 7;
+    int32 start_time = 8;
+    int32 end_time = 9;
+}
+
+message CreateButtonInteractionRequest {
+    string space_id = 1;
+    string short_id = 2;
+    ButtonInteraction interaction = 3;
+}
+
+message CreateButtonInteractionResponse {
+    string interaction_id = 1;
+}
+
+message UpdateButtonInteractionRequest {
+    string space_id = 1;
+    string short_id = 2;
+    ButtonInteraction interaction = 3;
+}
+
+message UpdateButtonInteractionResponse {
+    bool ok = 1;
+}
+
+message DeleteButtonInteractionRequest {
+    string space_id = 1;
+    string short_id = 2;
+    string interaction_id = 3;
+}
+
+message DeleteButtonInteractionResponse {
+    bool ok = 1;
+}
+
+message ProductInteraction {
+    string id = 1;
+    string text = 2;
+    bytes image = 3;
+    string image_ext = 4;
+    string image_url = 5;
+    string url = 6;
+    int32 start_time = 7;
+    int32 end_time = 8;
+    double price = 9;
+}
+
+message CreateProductInteractionRequest {
+    string space_id = 1;
+    string short_id = 2;
+    ProductInteraction interaction = 3;
+}
+
+message CreateProductInteractionResponse {
+    string interaction_id = 1;
+}
+
+message UpdateProductInteractionRequest {
+    string space_id = 1;
+    string short_id = 2;
+    ProductInteraction interaction = 3;
+}
+
+message UpdateProductInteractionResponse {
+    bool ok = 1;
+}
+
+message DeleteProductInteractionRequest {
+    string space_id = 1;
+    string short_id = 2;
+    string interaction_id = 3;
+}
+
+message DeleteProductInteractionResponse {
+    bool ok = 1;
+}
+
+enum ProductsCardsStyle {
+    UNKNOWN_PRODUCTS_CARDS_STYLE = 0;
+    SIMPLE_CARD_STYLE = 1;
+    DETAILED_CARD_STYLE = 2;
+}
+
+message UpdateProductsCardStyleRequest {
+    string space_id = 1;
+    string short_id = 2;
+    ProductsCardsStyle style = 3;
+}
+
+message UpdateProductsCardStyleResponse {
+    bool ok = 1;
+}
+
+message ApproveShortRequest {
+    string space_id = 1;
+    string short_id = 2;
+}
+
+message ApproveShortResponse {
+    bool ok = 1;
+}
+
+message RejectShortRequest {
+    string space_id = 1;
+    string short_id = 2;
+}
+
+message RejectShortResponse {
+    bool ok = 1;
+}
+
+message PublishShortRequest {
+    string space_id = 1;
+    string short_id = 2;
+}
+
+message PublishShortResponse {
+    bool ok = 1;
+}
+
+message UnpublishShortRequest {
+    string space_id = 1;
+    string short_id = 2;
+}
+
+message UnpublishShortResponse {
+    bool ok = 1;
+}
+
+message UpdateShortInteractionsRequest {
+    string space_id = 1;
+    string short_id = 2;
+    repeated HotspotInteraction hotspots_interactions = 3;
+    repeated ButtonInteraction button_interactions = 4;
+    repeated TextInteraction text_interactions = 5;
+    repeated ProductInteraction product_interactions = 6;
+}
+
+message UpdateShortInteractionsResponse {
+    bool ok = 1;
+}
+
+message DeleteShortRequest {
+    string space_id = 1;
+    string short_id = 2;
+}
+
+message DeleteShortResponse {
+    bool ok = 1;    
+}
+
+enum ThumbnailType {
+    UNKNOWN_THUMBNAIL_TYPE = 0;
+    SQUARE_THUMBNAIL_TYPE = 1;
+    PORTRAIT_THUMBNAIL_TYPE = 2;
+}
+
+message GenerateShortThumbnailRequest {
+    string space_id = 1;
+    string short_id = 2;
+    double top = 3;
+    double left = 4;
+    double width = 5;
+    double height = 6;
+    ThumbnailType thumbnail_type = 7;
+    double video_time = 8;
+}
+
+message GenerateShortThumbnailResponse {
+    string url = 1;
+}
+
+message UploadShortThumbnailRequest {
+    string space_id = 1;
+    string short_id = 2;
+    bytes img = 3;
+    string img_ext = 4;
+    ThumbnailType thumbnail_type = 5;
+}
+
+message UploadShortThumbnailResponse {
+    string url = 1;
+}
+
+service ShortsService {
+    rpc CreateShort(CreateShortRequest) returns (CreateShortResponse);
+    rpc DeleteShort(DeleteShortRequest) returns (DeleteShortResponse);
+    rpc UploadVideo(UploadVideoRequest) returns (UploadVideoResponse);
+    rpc DeleteVideo(DeleteVideoRequest) returns (DeleteVideoResponse);
+    rpc UpdateVideoConfig(UpdateVideoConfigRequest) returns (UpdateVideoConfigResponse);
+    rpc CombineVideos(CombineVideosRequest) returns (CombineVideosResponse);
+    rpc UpdateShort(UpdateShortRequest) returns (UpdateShortResponse);
+    rpc GetShort(GetShortRequest) returns (GetShortResponse);
+    rpc ListShorts(ListShortsRequest) returns (ListShortsResponse);
+    rpc UpdateShortInteractions(UpdateShortInteractionsRequest) returns (UpdateShortInteractionsResponse);
+
+    rpc AddHotspotInteraction(CreateHotspotInteractionRequest) returns (CreateHotspotInteractionResponse);
+    rpc UpdateHotspotInteraction(UpdateHotspotInteractionRequest) returns (UpdateHotspotInteractionResponse);
+    rpc DeleteHotspotInteraction(DeleteHotspotInteractionRequest) returns (DeleteHotspotInteractionResponse);
+
+    rpc AddTextInteraction(CreateTextInteractionRequest) returns (CreateTextInteractionResponse);
+    rpc UpdateTextInteraction(UpdateTextInteractionRequest) returns (UpdateTextInteractionResponse);
+    rpc DeleteTextInteraction(DeleteTextInteractionRequest) returns (DeleteTextInteractionResponse);
+
+    rpc AddButtonInteraction(CreateButtonInteractionRequest) returns (CreateButtonInteractionResponse);
+    rpc UpdateButtonInteraction(UpdateButtonInteractionRequest) returns (UpdateButtonInteractionResponse);
+    rpc DeleteButtonInteraction(DeleteButtonInteractionRequest) returns (DeleteButtonInteractionResponse);
+    
+    rpc AddProductInteraction(CreateProductInteractionRequest) returns (CreateProductInteractionResponse);
+    rpc UpdateProductInteraction(UpdateProductInteractionRequest) returns (UpdateProductInteractionResponse);
+    rpc DeleteProductInteraction(DeleteProductInteractionRequest) returns (DeleteProductInteractionResponse);
+    rpc UpdateProductsCardStyle(UpdateProductsCardStyleRequest) returns (UpdateProductsCardStyleResponse);
+
+    rpc ApproveShort(ApproveShortRequest) returns (ApproveShortResponse);
+    rpc RejectShort(RejectShortRequest) returns (RejectShortResponse);
+    rpc PublishShort(PublishShortRequest) returns (PublishShortResponse);
+    rpc UnpublishShort(UnpublishShortRequest) returns (UnpublishShortResponse);
+
+    rpc GenerateShortThumbnail(GenerateShortThumbnailRequest) returns (GenerateShortThumbnailResponse);
+    rpc UploadShortThumbnail(UploadShortThumbnailRequest) returns (UploadShortThumbnailResponse);
+}

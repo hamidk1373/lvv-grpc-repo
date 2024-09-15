@@ -1,0 +1,373 @@
+syntax = "proto3";
+
+package spaces;
+
+option go_package = "./spacespb";
+
+enum ChatForbiddenWordsType {
+  UNKNOWN_FORBIDDEN_WORDS = 0;
+  DEFAULT_FORBIDDEN_WORDS = 1;
+  CUSTOM_FORBIDDEN_WORDS = 2;
+  NO_FORBIDDEN_WORDS = 3;
+}
+
+message Space {
+  string space_id = 1;
+  string owner_id = 2;
+  string name = 3;
+  string industry = 4;
+  string country = 5;
+  string location = 6;
+  string platform = 7;
+  repeated SpaceUser space_users = 8;
+  repeated SpaceAccessApplication applications = 9;
+  repeated SpaceAccessInvitation invitations = 10;
+  int32 number_of_members = 11;
+  ChatForbiddenWordsType chat_forbidden_words_type = 12;
+  string picture_url = 13;
+  string api_key = 14;
+}
+
+message CreateSpaceRequest {
+  Space space = 1;
+}
+
+message CreateSpaceResponse {
+  string space_id = 1;
+}
+
+message UpdateSpaceRequest {
+  Space space = 1;
+}
+
+message UpdateSpaceResponse {
+}
+
+message DeleteSpaceRequest {
+  string space_id = 1;
+}
+
+message DeleteSpaceResponse {
+}
+
+message ListSpacesRequest {
+  string user_id = 1;
+  string page_token = 2;
+  int32 page_size = 3;
+}
+
+message ListSpacesResponse {
+  repeated Space spaces = 1;
+  int32 total_count = 2;
+  string next_page_token = 3;
+}
+
+message GetSpaceDetailsRequest {
+  string space_id = 1;
+}
+
+message GetSpaceDetailsResponse {
+  Space space = 1;
+}
+
+message ApplyForSpaceAccessRequest {
+  string space_id = 1;
+  string user_id = 2;
+  string user_first_name = 3;
+  string user_last_name = 4;
+  string user_email = 5;
+}
+
+message ApplyForSpaceAccessResponse {
+}
+
+message SpaceAccessApplication {
+  string id = 1;
+  string user_id = 2;
+  string user_email = 3;
+  string user_first_name = 4;
+  string user_last_name = 5;
+  string status = 6;
+}
+
+message AcceptSpaceAccessApplicationRequest {
+  string space_id = 1;
+  string application_id = 2;
+}
+
+message AcceptSpaceAccessApplicationResponse {
+}
+
+message DenySpaceAccessApplicationRequest {
+  string space_id = 1;
+  string application_id = 2;
+}
+
+message DenySpaceAccessApplicationResponse {
+}
+
+message InviteMemberToSpaceRequest {
+  string space_id = 1;
+  string user_id = 2;
+  string user_email = 3;
+  string inviter = 4;
+  bool user_exists = 5;
+  string invitee = 6;
+  SpaceRoleType shows_role = 7;
+  SpaceRoleType shorts_role = 8;
+}
+
+message InviteMemberToSpaceResponse {
+}
+
+message AcceptSpaceInvitationRequest {
+  string space_id = 1;
+  string invitation_id = 2;
+  string user_id = 3;
+  string user_email = 4;
+  string user_first_name = 5;
+  string user_last_name = 6;
+}
+
+message AcceptSpaceInvitationResponse {
+}
+
+message DeleteMemberFromSpaceRequest {
+  string space_id = 1;
+  string user_id = 2;
+}
+
+message DeleteMemberFromSpaceResponse {
+}
+
+message UpdateChatForbiddenWordsRequest {
+  string space_id = 1;
+  repeated string words = 2;
+  ChatForbiddenWordsType type = 3;
+}
+
+message UpdateChatForbiddenWordsResponse {
+}
+
+message UpdateDefaultForbiddenWordsRequest {
+  repeated string words = 1;
+}
+
+message UpdateDefaultForbiddenWordsResponse {
+}
+
+message WithdrawInvitationToSpaceRequest {
+  string space_id = 1;
+  string invitation_id = 2;
+}
+
+message WithdrawInvitationToSpaceResponse {}
+
+message SpaceAccessInvitation {
+  string id = 1;
+  string user_id = 2;
+  string user_email = 3;
+  string status = 4;
+}
+
+message CheckSpaceAccessRequest{
+  string user_id = 1;
+  string space_id = 2;
+}
+
+message CheckSpaceAccessResponse {}
+
+enum SpaceRoleType {
+  UNKNOWN_SPACE_ROLE = 0;
+  OWNER_SPACE_ROLE =1;
+  ADMIN_SPACE_ROLE = 2;
+  HOST_SPACE_ROLE = 3;
+  MODERATOR_SPACE_ROLE = 4;
+}
+
+message SpaceUser {
+  string user_id = 1;
+  string user_email = 2;
+  string user_first_name = 3;
+  string user_last_name = 4;
+  SpaceRoleType shows_role = 5;
+  SpaceRoleType shorts_role = 6;
+}
+
+message GetSpaceIDBySpaceNameRequest {
+  string space_name = 1;
+}
+
+message GetSpaceIDBySpaceNameResponse {
+  string space_id = 1;
+}
+
+message ChangeUserSpaceRoleRequest {
+  string space_id = 1;
+  string user_id = 2;
+  SpaceRoleType shows_role = 3;
+  SpaceRoleType shorts_role = 4;
+}
+
+message ChangeUserSpaceRoleResponse {
+}
+
+message GetUserApplicationsRequest {
+  string user_id = 1;
+}
+
+message GetUserApplicationsResponse {
+  repeated UserApplication applications = 1;
+}
+
+message UserApplication {
+  string application_id = 1;
+  string space_id = 2;
+  string space_name = 3;
+}
+
+message GetUserInvitationsRequest {
+  string user_email = 1;
+}
+
+message GetUserInvitationsResponse {
+  repeated UserInvitation invitations = 1;
+}
+
+message UserInvitation {
+  string invitation_id = 1;
+  string space_id = 2;
+  string space_name = 3;
+}
+
+message WithdrawSpaceAccessApplicationRequest {
+  string space_id = 1;
+  string application_id = 2;
+}
+
+message WithdrawSpaceAccessApplicationResponse {
+}
+
+message DenySpaceInvitationRequest {
+  string space_id = 1;
+  string invitation_id = 2;
+}
+
+message DenySpaceInvitationResponse {
+}
+
+message UploadSpacePhotoRequest {
+  string space_id = 1;
+  bytes image = 2;
+  string img_ext = 3;
+}
+
+message UploadSpacePhotoResponse {
+  string url = 1;
+}
+
+message ChangeSpaceOwnerRequest {
+  string space_id = 1;
+  string new_owner_id = 2;
+}
+
+message ChangeSpaceOwnerResponse {
+  
+}
+
+message GetUserSpaceRoleRequest {
+  string user_id = 1;
+  string space_id = 2;
+}
+
+message GetUserSpaceRoleResponse {
+  SpaceRoleType shows_role = 1;
+  SpaceRoleType shorts_role = 2;
+}
+
+message RegenerateAPIKeyRequest {
+  string space_id = 1;
+}
+
+message RegenerateAPIKeyResponse {}
+
+message ValidateAPIKeyRequest {
+  string api_key = 1;
+}
+
+message ValidateAPIKeyResponse {
+  string space_id = 1;
+}
+
+message CreateCategoryRequest {
+  string space_id = 1;
+  string slug = 2;
+  string name = 3;
+}
+
+message CreateCategoryResponse {
+  string slug = 1;
+}
+
+message DeleteCategoryRequest {
+  string space_id = 1;
+  string slug = 2;
+}
+
+message DeleteCategoryResponse {
+}
+
+message ListCategoriesRequest {
+  string space_id = 1;
+}
+
+message ListCategoriesResponse {
+  repeated Category categories = 1;
+}
+
+message Category {
+  string slug = 1;
+  string name = 2;
+}
+
+// The service definition.
+service SpacesService {
+  rpc CreateSpace(CreateSpaceRequest) returns (CreateSpaceResponse);
+  rpc UpdateSpace(UpdateSpaceRequest) returns (UpdateSpaceResponse);
+  rpc DeleteSpace(DeleteSpaceRequest) returns (DeleteSpaceResponse);
+  rpc ListSpaces(ListSpacesRequest) returns (ListSpacesResponse);
+  rpc GetSpaceDetails(GetSpaceDetailsRequest) returns (GetSpaceDetailsResponse);
+  rpc GetSpaceIDBySpaceName(GetSpaceIDBySpaceNameRequest) returns (GetSpaceIDBySpaceNameResponse);
+  rpc UploadSpacePhoto(UploadSpacePhotoRequest) returns (UploadSpacePhotoResponse);
+
+  rpc CheckSpaceAccess(CheckSpaceAccessRequest) returns (CheckSpaceAccessResponse);
+
+  rpc GetUserSpaceRole(GetUserSpaceRoleRequest) returns (GetUserSpaceRoleResponse);
+  rpc ChangeUserSpaceRole(ChangeUserSpaceRoleRequest) returns (ChangeUserSpaceRoleResponse);
+
+  rpc ApplyForSpaceAccess(ApplyForSpaceAccessRequest) returns (ApplyForSpaceAccessResponse);
+  rpc AcceptSpaceAccessApplication(AcceptSpaceAccessApplicationRequest) returns (AcceptSpaceAccessApplicationResponse);
+  rpc DenySpaceAccessApplication(DenySpaceAccessApplicationRequest) returns (DenySpaceAccessApplicationResponse);
+  rpc WithdrawSpaceAccessApplication(WithdrawSpaceAccessApplicationRequest) returns (WithdrawSpaceAccessApplicationResponse);
+  rpc GetUserApplications(GetUserApplicationsRequest) returns (GetUserApplicationsResponse);
+
+  rpc InviteMemberToSpace(InviteMemberToSpaceRequest) returns (InviteMemberToSpaceResponse);
+  rpc WithdrawInvitationToSpace(WithdrawInvitationToSpaceRequest) returns (WithdrawInvitationToSpaceResponse);
+  rpc GetUserInvitations(GetUserInvitationsRequest) returns (GetUserInvitationsResponse);
+
+  rpc AcceptSpaceInvitation(AcceptSpaceInvitationRequest) returns (AcceptSpaceInvitationResponse);
+  rpc DenySpaceInvitation(DenySpaceInvitationRequest) returns (DenySpaceInvitationResponse);
+
+  rpc DeleteMemberFromSpace(DeleteMemberFromSpaceRequest) returns (DeleteMemberFromSpaceResponse);
+
+  rpc UpdateChatForbiddenWords(UpdateChatForbiddenWordsRequest) returns (UpdateChatForbiddenWordsResponse);
+
+  rpc ChangeSpaceOwner(ChangeSpaceOwnerRequest) returns (ChangeSpaceOwnerResponse);
+
+  rpc RegenerateAPIKey(RegenerateAPIKeyRequest) returns (RegenerateAPIKeyResponse);
+  rpc ValidateAPIKey(ValidateAPIKeyRequest) returns (ValidateAPIKeyResponse);
+
+  rpc CreateCategory(CreateCategoryRequest) returns (CreateCategoryResponse);
+  rpc DeleteCategory(DeleteCategoryRequest) returns (DeleteCategoryResponse);
+  rpc ListCategories(ListCategoriesRequest) returns (ListCategoriesResponse);
+}
