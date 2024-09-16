@@ -114,6 +114,7 @@ message ListShortsRequest {
     string product_url = 8;
     repeated string categories = 9;
     bool match_all_categories = 10;
+    bool displayedNow = 11;
 }
 
 message ListShortsResponse {
