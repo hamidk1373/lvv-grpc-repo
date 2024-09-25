@@ -103,6 +103,15 @@ message GetShortResponse {
     Short short = 1;
 }
 
+message GetShortByUniqueIDRequest {
+    string unique_id = 1;
+    bool include_manifest = 2;
+}
+
+message GetShortByUniqueIDResponse {
+    Short short = 1;
+}
+
 message ListShortsRequest {
     string space_id = 1;
     int32 page_size = 2;
@@ -147,6 +156,7 @@ message Short {
     string portrait_thumbnail_url = 21;
     string creator_id = 22;
     repeated string categories = 23;
+    string unique_id = 24;
 }
 
 message InteractionItemPositionInPercentage {
@@ -435,6 +445,7 @@ service ShortsService {
     rpc CombineVideos(CombineVideosRequest) returns (CombineVideosResponse);
     rpc UpdateShort(UpdateShortRequest) returns (UpdateShortResponse);
     rpc GetShort(GetShortRequest) returns (GetShortResponse);
+    rpc GetShortByUniqueID(GetShortByUniqueIDRequest) returns (GetShortByUniqueIDResponse);
     rpc ListShorts(ListShortsRequest) returns (ListShortsResponse);
     rpc UpdateShortInteractions(UpdateShortInteractionsRequest) returns (UpdateShortInteractionsResponse);
 

@@ -30,6 +30,7 @@ type ShortsServiceClient interface {
 	CombineVideos(ctx context.Context, in *CombineVideosRequest, opts ...grpc.CallOption) (*CombineVideosResponse, error)
 	UpdateShort(ctx context.Context, in *UpdateShortRequest, opts ...grpc.CallOption) (*UpdateShortResponse, error)
 	GetShort(ctx context.Context, in *GetShortRequest, opts ...grpc.CallOption) (*GetShortResponse, error)
+	GetShortByUniqueID(ctx context.Context, in *GetShortByUniqueIDRequest, opts ...grpc.CallOption) (*GetShortByUniqueIDResponse, error)
 	ListShorts(ctx context.Context, in *ListShortsRequest, opts ...grpc.CallOption) (*ListShortsResponse, error)
 	UpdateShortInteractions(ctx context.Context, in *UpdateShortInteractionsRequest, opts ...grpc.CallOption) (*UpdateShortInteractionsResponse, error)
 	AddHotspotInteraction(ctx context.Context, in *CreateHotspotInteractionRequest, opts ...grpc.CallOption) (*CreateHotspotInteractionResponse, error)
@@ -127,6 +128,15 @@ func (c *shortsServiceClient) UpdateShort(ctx context.Context, in *UpdateShortRe
 func (c *shortsServiceClient) GetShort(ctx context.Context, in *GetShortRequest, opts ...grpc.CallOption) (*GetShortResponse, error) {
 	out := new(GetShortResponse)
 	err := c.cc.Invoke(ctx, "/shorts.ShortsService/GetShort", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *shortsServiceClient) GetShortByUniqueID(ctx context.Context, in *GetShortByUniqueIDRequest, opts ...grpc.CallOption) (*GetShortByUniqueIDResponse, error) {
+	out := new(GetShortByUniqueIDResponse)
+	err := c.cc.Invoke(ctx, "/shorts.ShortsService/GetShortByUniqueID", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -334,6 +344,7 @@ type ShortsServiceServer interface {
 	CombineVideos(context.Context, *CombineVideosRequest) (*CombineVideosResponse, error)
 	UpdateShort(context.Context, *UpdateShortRequest) (*UpdateShortResponse, error)
 	GetShort(context.Context, *GetShortRequest) (*GetShortResponse, error)
+	GetShortByUniqueID(context.Context, *GetShortByUniqueIDRequest) (*GetShortByUniqueIDResponse, error)
 	ListShorts(context.Context, *ListShortsRequest) (*ListShortsResponse, error)
 	UpdateShortInteractions(context.Context, *UpdateShortInteractionsRequest) (*UpdateShortInteractionsResponse, error)
 	AddHotspotInteraction(context.Context, *CreateHotspotInteractionRequest) (*CreateHotspotInteractionResponse, error)
@@ -385,6 +396,9 @@ func (UnimplementedShortsServiceServer) UpdateShort(context.Context, *UpdateShor
 }
 func (UnimplementedShortsServiceServer) GetShort(context.Context, *GetShortRequest) (*GetShortResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetShort not implemented")
+}
+func (UnimplementedShortsServiceServer) GetShortByUniqueID(context.Context, *GetShortByUniqueIDRequest) (*GetShortByUniqueIDResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetShortByUniqueID not implemented")
 }
 func (UnimplementedShortsServiceServer) ListShorts(context.Context, *ListShortsRequest) (*ListShortsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListShorts not implemented")
@@ -602,6 +616,24 @@ func _ShortsService_GetShort_Handler(srv interface{}, ctx context.Context, dec f
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ShortsServiceServer).GetShort(ctx, req.(*GetShortRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ShortsService_GetShortByUniqueID_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetShortByUniqueIDRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ShortsServiceServer).GetShortByUniqueID(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/shorts.ShortsService/GetShortByUniqueID",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ShortsServiceServer).GetShortByUniqueID(ctx, req.(*GetShortByUniqueIDRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1022,6 +1054,10 @@ var ShortsService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetShort",
 			Handler:    _ShortsService_GetShort_Handler,
+		},
+		{
+			MethodName: "GetShortByUniqueID",
+			Handler:    _ShortsService_GetShortByUniqueID_Handler,
 		},
 		{
 			MethodName: "ListShorts",
